@@ -1,0 +1,23 @@
+ ewrl < http://github.com/lrvick/ewrl >
+
+WHAT IS EWRL?
+
+    Ewrl (pronounced: "URL") is a python module designed to expand urls,
+    collect titles, and generate short urls, while also having the ability
+    to log how many times a given url has been "seen", and via what sources.
+
+CURRENT FEATURES:
+
+ * Expands short URLS to their logner counterparts
+
+ * Determine the title of a given url.
+
+ * Clean crazy nonsense urls
+ 
+
+NOTES
+
+	This is by no means production-ready code. Do not actually use it in
+	production unless you wish to be eaten by a grue.
+
+	Questions/Comments? Please check us out on IRC via irc://udderweb.com/#uw
