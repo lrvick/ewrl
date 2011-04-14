@@ -46,7 +46,7 @@ def url_expand(url,n=1,original_url=None,**kwargs):
         url = url_clean(url)
         return url
     else:
-        url_expand(current_url,n,original_url)
+        return url_expand(current_url,n,original_url)
 
 def url_title(url,**kwargs):
     request = urllib2.Request(url)
@@ -85,3 +85,9 @@ def url_title(url,**kwargs):
                         return False
             else:
                 return False
+
+
+if __name__=="__main__":
+    #put tests here
+    print url_expand('http://bit.ly/fwGp4w')
+    print "https://github.com/lrvick/ewrl/blob/master/ewrl.py"
