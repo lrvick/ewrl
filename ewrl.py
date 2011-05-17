@@ -1,8 +1,8 @@
 import httplib
 import urlparse
 import urllib
-import urllib2
 import re
+import lxml.html
 
 def url_clean(url):
     domain, query = urllib.splitquery(url)
@@ -48,46 +48,24 @@ def url_expand(url,n=1,original_url=None,**kwargs):
     else:
         return url_expand(current_url,n,original_url)
 
-def url_title(url,**kwargs):
-    request = urllib2.Request(url)
-    data = None
+def url_data(url,**kwargs):
+    feed = None
+    title = None
+    html = lxml.html.parse(url)
     try:
-        response = urllib2.urlopen(request)
-        data = response.read()
-    except urllib2.HTTPError:
+        feed = html.xpath('//link[@type="application/rss+xml"]/@href')[0]
+        if not 'http' in feed:
+            feed = "%s%s" % (url,feed)
+    except:
         pass
-    except urllib2.URLError:
+    try:
+        title = html.find('.//title').text
+    except:
         pass
-    except httplib.BadStatusLine:
-        pass
-    except httplib.InvalidURL:
-        pass
-    except httplib.IncompleteRead:
-        data = None
-    except ValueError:
-        data = None
-    if data:
-        if '<title>' in data:
-            headers = response.info()
-            content_type = headers.get('content-type',None)
-            if content_type:
-                raw_encoding = content_type.split('charset=')[-1]
-                if 'text/html' in raw_encoding:
-                    encoding = 'unicode-escape'
-                else:
-                    encoding = raw_encoding
-                title_search = re.search('(?<=<title>).*(?=<\/title>)',data)
-                if title_search:
-                    try:
-                        title = unicode(title_search.group(0),encoding)
-                        return title
-                    except Exception, e:
-                        return False
-            else:
-                return False
-
+    return [title, feed]
 
 if __name__=="__main__":
-    #put tests here
+    print "-- Testing ewrl --\n\n"
     print url_expand('http://bit.ly/fwGp4w')
     print "https://github.com/lrvick/ewrl/blob/master/ewrl.py"
+    print url_data
