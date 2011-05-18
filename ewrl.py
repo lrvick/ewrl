@@ -90,6 +90,9 @@ def url_shorten(url,service='goo.gl'):
         photo_id = parsed_url.path.split('/')[3]
         base58_photo_id = base58(photo_id)
         short_url = 'http://flic.kr/p/%s' % base58_photo_id
+    elif 'wordpress' in url:
+        html = lxml.html.parse(url)
+        short_url = html.xpath('//link[@rel="shortlink"]/@href')[0]
     else:
         if service == 'goo.gl':
             try:
@@ -115,6 +118,8 @@ if __name__=="__main__":
     print url_expand('http://bit.ly/fwGp4w')
     print "\nShortening 'http://www.youtube.com/watch?v=dQw4w9WgXcQ':"
     print url_shorten('http://www.youtube.com/watch?v=dQw4w9WgXcQ')
+    print "\nShortening 'http://en.blog.wordpress.com/2009/08/14/shorten/':"
+    print url_shorten('http://en.blog.wordpress.com/2009/08/14/shorten/')
     print "\nShortening 'http://www.flickr.com/photos/lrvick/5684925240/':"
     print url_shorten('http://www.flickr.com/photos/lrvick/5684925240/')
     print "\nShortening 'https://github.com/lrvick/ewrl/' with goo.gl:"
@@ -123,4 +128,3 @@ if __name__=="__main__":
     print url_shorten('https://github.com/lrvick/ewrl/','is.gd')
     print "\nShortening 'https://github.com/lrvick/ewrl/' with tinyurl:"
     print url_shorten('https://github.com/lrvick/ewrl/','tinyurl')
-    
