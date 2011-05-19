@@ -53,17 +53,17 @@ def url_expand(url,n=1,original_url=None,**kwargs):
 def url_data(url):
     feed = None
     title = None
-    html = lxml.html.parse(url)
+    data = None
     try:
-        feed = html.xpath('//link[@type="application/rss+xml"]/@href')[0]
-        if not 'http' in feed:
-            feed = "%s%s" % (url,feed)
+        data = urllib2.urlopen(url, None, 2).read(6000)
     except:
         pass
-    try:
-        title = html.find('.//title').text
-    except:
-        pass
+    if data:
+        try:
+            title = re.search('title[^>]*>[ ]*(.*?)[ ]*</[ ]*title',re.sub('\n|\r','',data),re.I).group(1)
+            feed = re.search('application/rss\+xml[^>]*href=\"(.*?)\"[^/]/>.*',re.sub('\n|\r','',re.sub('\n|\r','',data),re.I)).group(1)
+        except Exception, e:
+            print e
     return [title, feed]
 
 def base58(n):
@@ -114,6 +114,7 @@ if __name__=="__main__":
     print "\n-- Testing ewrl --"
     print "\nFetching Title and RSS feed of 'http://theoatmeal.com/'"
     print url_data('http://theoatmeal.com/')
+    """"
     print "\nExpanding 'http://bit.ly/fwGp4w':"
     print url_expand('http://bit.ly/fwGp4w')
     print "\nShortening 'http://www.youtube.com/watch?v=dQw4w9WgXcQ':"
@@ -128,3 +129,4 @@ if __name__=="__main__":
     print url_shorten('https://github.com/lrvick/ewrl/','is.gd')
     print "\nShortening 'https://github.com/lrvick/ewrl/' with tinyurl:"
     print url_shorten('https://github.com/lrvick/ewrl/','tinyurl')
+    """
