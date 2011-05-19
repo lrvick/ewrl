@@ -56,12 +56,17 @@ def url_data(url):
     data = None
     try:
         data = urllib2.urlopen(url, None, 2).read(6000)
+        data = re.sub('\n|\r','',data)
     except:
         pass
     if data:
         try:
-            title = re.search('title[^>]*>[ ]*(.*?)[ ]*</[ ]*title',re.sub('\n|\r','',data),re.I).group(1)
-            feed = re.search('application/rss\+xml[^>]*href=\"(.*?)\"[^/]/>.*',re.sub('\n|\r','',re.sub('\n|\r','',data),re.I)).group(1)
+            title_search = re.search('title[^>]*>[ ]*(.*?)[ ]*</[ ]*title',data,re.I)
+            if title_search is not None:
+                title = title_search.group(1)
+            feed_search = re.search('application/rss\+xml[^>]*href=\"(.*?)\"[^/]/>.*',data,re.I)
+            if feed_search is not None:
+                feed = feed_search.group(1)
         except Exception, e:
             print e
     return [title, feed]
