@@ -114,7 +114,6 @@ if __name__=="__main__":
     print "\n-- Testing ewrl --"
     print "\nFetching Title and RSS feed of 'http://theoatmeal.com/'"
     print url_data('http://theoatmeal.com/')
-    """"
     print "\nExpanding 'http://bit.ly/fwGp4w':"
     print url_expand('http://bit.ly/fwGp4w')
     print "\nShortening 'http://www.youtube.com/watch?v=dQw4w9WgXcQ':"
@@ -129,4 +128,3 @@ if __name__=="__main__":
     print url_shorten('https://github.com/lrvick/ewrl/','is.gd')
     print "\nShortening 'https://github.com/lrvick/ewrl/' with tinyurl:"
     print url_shorten('https://github.com/lrvick/ewrl/','tinyurl')
-    """
