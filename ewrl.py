@@ -1,9 +1,21 @@
 import urllib
-import urllib2
 import urlparse
 import re
 import json
 import lxml.html
+try:
+    import eventlet
+    from eventlet.green import urllib2
+except ImportError:
+    import urllib2
+
+def batch_url_expand(url_list):
+    def batch_expand(url):
+        return url_expand(url,True)
+    completed_urls={}
+    pool = eventlet.GreenPool()
+    for expanded_url in pool.imap(batch_expand, url_list):
+        yield expanded_url
 
 def url_clean(url):
     domain, query = urllib.splitquery(url)
@@ -15,15 +27,15 @@ def url_clean(url):
         new_url = domain
     return new_url
 
-def url_expand(url,**kwargs):
+def url_expand(url,return_orig=False):
     headers = { 'User-Agent' : 'Mozilla/5.0' }
     url = url_clean(url)
+    orig_url = url
     last_url = None
     n = 0
     while last_url != url:
         n += 1
         if n > 2:
-            print n
             url = last_url
         else:
             try:
@@ -35,7 +47,10 @@ def url_expand(url,**kwargs):
                 if last_url is not None:
                     url = last_url
                 break
-    return url
+    if return_orig:
+        return orig_url,url
+    else:
+        return url
 
 def url_data(url):
     feed = None
