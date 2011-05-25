@@ -33,7 +33,7 @@ def url_expand(url,return_orig=False):
     orig_url = url
     last_url = None
     n = 0
-    while last_url != url:
+    while unicode(last_url) != unicode(url):
         n += 1
         if n > 2:
             url = last_url
@@ -47,6 +47,7 @@ def url_expand(url,return_orig=False):
                 if last_url is not None:
                     url = last_url
                 break
+    url=unicode(url)
     if return_orig:
         return orig_url,url
     else:
