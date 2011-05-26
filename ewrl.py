@@ -63,15 +63,17 @@ def url_data(url):
     except:
         pass
     if data:
+        html = lxml.html.fromstring(data)
         try:
-            title_search = re.search('title[^>]*>[ ]*(.*?)[ ]*</[ ]*title',data,re.I)
-            if title_search is not None:
-                title = title_search.group(1)
-            feed_search = re.search('application/rss\+xml[^>]*href=\"(.*?)\"[^/]/>.*',data,re.I)
-            if feed_search is not None:
-                feed = feed_search.group(1)
-        except Exception, e:
-            print e
+            feed = html.xpath('//link[@type="application/rss+xml"]/@href')[0]
+            if not 'http' in feed:
+                feed = "%s%s" % (url,feed)
+        except:
+            pass
+        try:
+            title = html.find('.//title').text
+        except:
+            pass
     return [title, feed]
 
 def base58(n):
